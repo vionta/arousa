@@ -1,2 +1,413 @@
 # arousa
 Arousa is an example on using Ivy dependency manager on data/content transformation projects. It is wrapped as a tool that help managing the project templates.
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="generator" content="DITA-OT" /><meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Arousa dependency system" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="main" />
+<link rel="stylesheet" type="text/css" href="commonltr.css" />
+<title>Arousa dependency system</title>
+</head>
+<body id="main">
+
+  <h1 class="title topictitle1" id="ariaid-title1">Arousa dependency system</h1>
+
+
+  <div class="body">
+    <div class="section"><h2 class="title sectiontitle">Introduction</h2>
+      
+      <p class="p">Arousa is an example of dependency
+      management on data/content transformation projects. It is aimed as a tool
+      for managing dependencies between Xslts, XQuery, Xproc, scripts and
+      related resources. It is also intended as an example for getting started
+      with Apache Ivy on such kind of projects, that rely frequently on reusable
+      steps and components.
+      </p>
+
+      <p class="p">Apache Ivy as a general purpose dependency
+      management tool. It is used frequently with Apache Ant. Ant is a mature
+      build tool appropriate for projects that need detail and flexibility. Ivy
+      is an abstract dependency management framework, open to a wide range of
+      use cases.</p>
+
+      <p class="p">Arousa has two main parts: </p>
+
+      <p class="p">1. A management
+      Script that helps your create and update the project templates and
+      configuration files.</p>
+
+      <p class="p">2. A base (or set of base) template project
+      with a pre-built Apache Ivy configuration. </p>
+
+    </div>
+
+
+    <div class="section"><h2 class="title sectiontitle">Why did I do it ?</h2>
+      
+      <p class="p">I think that Ivy adapts really well to
+      transformation projects, where detail is key and every case
+      may have some specific needs. Many of this tools are
+      frequently handled with Ant.</p>
+
+      <p class="p">I already had some small experience with Ivy, and was
+      struggling with non DRY practices. So, I hope that this
+      can be useful as a jump in aid or as a hint other people.
+      Please use it and enjoy it.
+      </p>
+
+    </div>
+
+
+    <div class="section"><h2 class="title sectiontitle">Quick Start.</h2>
+      
+      <div class="div">
+	<p class="p">Installing the base script. </p>
+
+	<p class="p">1. Dowload and unpack the Arousa zip distribution.</p>
+
+	<p class="p">2. Set the
+	AROUSA_HOME var on your system in a similar way to
+	the JAVA_HOME,ANT_HOME, etc. Just set
+	the AROUSA_HOME pointing to your installation.
+	</p>
+
+	<pre class="pre codeblock"><code>
+	  export AROUSA_HOME=&lt;Your_Installaton_path&gt;
+
+	  export PATH=$PATH:$AROUSA_HOME
+	</code></pre>
+	<p class="p">3. Navigate to a work folder and type:</p>
+
+	<pre class="pre codeblock"><code>
+	  arousa 
+	</code></pre>
+	<p class="p">If you can see the arousa command line help
+	output you should be ready to start your first
+	project. </p>
+
+	<p class="p">Type:</p>
+
+	<pre class="pre codeblock"><code>
+	  arousa template-project &lt;your-new-project-name&gt;
+	</code></pre>
+	<p class="p">(you could also copy the template by hand and adjust
+	name and configuration files).</p>
+
+	<p class="p">At this point you should have created your
+	first Arousa project with a build and configuration
+	samples.</p>
+
+      </div>
+
+      <div class="div">
+	<p class="p">Running your first project:</p>
+
+	<p class="p">In your new project
+	you can run the usual clean, build ant commands. You can
+	adjust the build commands to suit your specific needs. </p>
+
+	<p class="p">We are now going to start managing dependencies.
+	Type one of the following commands
+	</p>
+
+	<pre class="pre codeblock"><code>
+	  arousa update-dependencies
+	  ant arousa-update-dependencies
+	</code></pre>
+	<p class="p">At this point you should notice
+	that apache Ivy is downloading and a report on
+	dependencies should also be showing. If everything
+	looks ok, it's time to publish your first
+	dependency.</p>
+
+	<p class="p">Open the conf/arousa-ivy.xml and adjust name, path and
+	version. Prepare the artifact for the build (adjust the
+	name of the package and type </p>
+
+	<pre class="pre codeblock"><code>
+	  ant package
+	</code></pre>
+	<p class="p">At this point a zip file with your name and version should
+	be in the dist folder. Type one of the following:</p>
+
+	<pre class="pre codeblock"><code>
+	  ant dist 
+	  ant arousa-publish-dependency
+	  arousa publish-dependency
+	</code></pre>
+	<p class="p">If everything is ok, you should have
+	published your first dependency and your dist zip
+	file should be in a subfolder of your ivy repository. </p>
+
+      </div>
+      <div class="div">
+	<p class="p">Declaring dependencies</p>
+
+	<p class="p">You will need to create a second
+	dependency project and add your first
+	project as a dependency.</p>
+
+	<p class="p">Example:</p>
+
+	<p class="p">----- Meter ejemplo -------------</p>
+ 
+	<p class="p">Run one of the following:</p>
+
+	<pre class="pre codeblock"><code>
+	  ant arousa-update-dependencies
+	</code></pre>
+	<pre class="pre codeblock"><code>
+	  arousa update-dependencies
+	</code></pre>
+	<p class="p">----Pendiente: Ejemplo de salida ------</p>
+
+	<p class="p">Now take a look at the lib and deps
+	folders. On the lib folder you should have your
+	zip files. On the dep folder you should have your
+	xslts, xprocs, ..etc. </p>
+
+	<p class="p">On the build folder your static resources
+	(css, img, svg, etc.) should also be placed.
+	</p>
+
+      </div>
+    </div>
+
+    
+
+    <div class="section"><h2 class="title sectiontitle">The dependencies/lib folder convention.</h2>
+      
+      <p class="p">Until now, what we have shown is 100% Ant/Ivy with
+      nothing else added or strings attached. In order to
+      differentiate dependency scripts from your current ones,
+      and also in order to work on
+      the next dependency chain step, we need
+      to add some sort of folder naming convention.</p>
+
+      <p class="p">We take source filesfrom </p>
+
+      <p class="p">src/css</p>
+
+      <p class="p">src/xslt</p>
+
+      <p class="p">src/xproc </p>
+
+      <p class="p">and so on.</p>
+
+      <p class="p">We place (expanded) dependency files on </p>
+
+      <p class="p">dep/xslt</p>
+
+      <p class="p">dep/xproc</p>
+
+      <p class="p">etc. </p>
+
+      <p class="p">We avoid using the lib folder directly
+      for the expanded files, since this is the default ivy folder and there is
+      risk of collisions in file names. The zip files will be downloaded to the
+      lib folder. It could be difficult to manage expanded and downloaded
+      packages in the same location. </p>
+
+      <p class="p">In order to refer to the dependendant script files,
+      you should declare dependencies like the
+      following example:</p>
+
+      <pre class="pre codeblock"><code>
+	....
+	&lt;p:xslt name="tasks-average"&gt;
+	  &lt;p:input port="stylesheet"&gt;
+	    &lt;p:document href="../../deps/xsl/grouped-tasks-average.xsl"/&gt;
+	  &lt;/p:input&gt;
+	  &lt;p:input port="parameters"&gt;&lt;p:empty/&gt;&lt;/p:input&gt;
+	&lt;/p:xslt&gt;
+	...
+      </code></pre>
+      <p class="p">The above example shows a call to a dependency xslt script from and xproc file</p>
+
+      <pre class="pre codeblock"><code>
+	...
+	&lt;target name="build" &gt;
+	  &lt;getodcontent odsfile="data/plan/Planificacion.ods" destfolder="temp" /&gt;
+	  &lt;calabdoc src="./deps/xpl/extract-ods-tasks.xpl" doc="./temp/content.xml"  /&gt;
+	&lt;/target&gt;
+	...
+      </code></pre>
+      <p class="p">The above example shows a call to a dependency xproc script from and ant
+      build file</p>
+
+      
+      <p class="p">You can refer your dependencies from the same folder in the
+      following way. </p>
+
+      <pre class="pre codeblock"><code>
+	&lt;xsl:stylesheet
+	    version="3.0"
+	    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    &gt;
+
+	    &lt;xsl:output method="xml" indent="yes" &gt;&lt;/xsl:output&gt;
+	    &lt;xsl:import href="planning-elements.xsl" /&gt;
+	    ...
+	    &lt;xsl:template match="@*"&gt;
+	      ....
+	    &lt;/xsl:template&gt;
+	    ...
+	&lt;/xsl:stylesheet&gt;
+      </code></pre>
+      
+      <pre class="pre codeblock"><code>
+      &lt;p:declare-step name="extract-tasks"
+		      xmlns:p="http://www.w3.org/ns/xproc"
+		      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		      version="1.0"
+		      &gt;
+	....
+        &lt;p:xslt name="empty-cells"&gt;
+	  &lt;p:with-input
+	    port="stylesheet"
+	      href="../xsl/process-empty-cells.xsl"/&gt;
+        &lt;/p:xslt&gt;
+	....
+      &lt;/p:declare-step&gt;
+      </code></pre>
+      
+      <p class="p">This is the only convention added by the tool/scrip/example. What you get is 100%
+      compatible Ant/Ivy projects apart from that. You can run the projects with
+      Ant on a computer without the Arousa Script without problems, ...
+      hopefully... .</p>
+
+    </div>
+
+
+    <div class="section"><h2 class="title sectiontitle">Tailoring Arousa.</h2>
+      
+      <p class="p">Arousa is a generic example for data/content transformation and
+      dependency management. </p>
+
+      <p class="p">This kind of projects need a great level of detail and
+      adjustment/flexibility.</p>
+
+      <p class="p">You can adjust the solution by modifying the Ant task in the build and
+      conf/arousa-build.xml files. You can do it in one specific project or add
+      a modified template to the tool. </p>
+
+      <p class="p">The configuration Scripts</p>
+
+      <p class="p">The Arousa template project is based on the following set of scripts.
+      </p>
+
+      <p class="p">/build.xml </p>
+
+      <p class="p">This is the generic/usual Ant build file with
+      the usual clean, build, package tasks. </p>
+
+      <p class="p">conf/arousa-build.xml </p>
+
+      <p class="p">The base Arousa script with the targets that handle dependency
+      publishing and retrieving. </p>
+
+      <p class="p">conf/arousa-ivy.xml</p>
+
+      <p class="p">The project publications and dependencies. Despite its name,
+      this is a regular ivy.xml file.</p>
+
+      <p class="p">conf/arousa-config.xml</p>
+
+      <p class="p">This file configures the repositories location, chain, etc.
+      It is also an Ivy regular configuration file. </p>
+
+      <p class="p">Where can I get more information </p>
+
+      <ol class="ol">
+	<li class="li">Apache Ant Manual</li>
+
+	<li class="li">Apache Ivy Documentation</li>
+
+      </ol>
+
+    </div>
+
+    <div class="section"><h2 class="title sectiontitle">Requirements</h2>
+      
+      <ol class="ol">
+	<li class="li">Ant installation and some basic knowledge. Since all the solution is
+	based on Apache Ant, some knowledge is needed. A working Apache Ant
+	installation is needed.</li>
+
+	<li class="li">
+	  <p class="p">Bash or Cygwin.</p>
+
+	  <p class="p">The Arousa script has been only tested on a bash environment based on
+	  Cygwin. There are lots of aspects that need testing on different systems.
+	  Also, the script may be ported to windows .bat file.</p>
+
+
+	  <p class="p">Even if your system does not support the script you can copy and paste
+	  the template by hand and use them with pure Ant.</p>
+
+
+	  <p class="p">The ant parts should work in different environments with small or no
+	  adjustment.</p>
+
+	</li>
+
+      </ol>
+
+    </div>
+
+
+    <div class="section"><h2 class="title sectiontitle">Configuration</h2>
+      
+
+      <p class="p">The directory structure convention</p>
+
+
+      <p class="p">In order to maintain a clean distribution we needed to adopt a folder
+      convention. We also needed to adopt a naming schema that (kind of)
+      transparently integrate the dependency references both from the current
+      project and the next ones.</p>
+
+
+      <p class="p">We use a two level folder configuration.</p>
+
+
+      <p class="p">&lt;your-project&gt;/src/xsl</p>
+
+
+      <p class="p">--- Meter pantallazo --</p>
+
+    </div>
+
+
+    <div class="section"><h2 class="title sectiontitle">Tools and Aknoledgements</h2>
+      
+
+      <p class="p">Apache Ant. The scripts are based on the mature/popular build tool.</p>
+
+
+      <p class="p">Apache Ivy. Basically, this tool/script is an example of an Apache Ivy
+      configuration.</p>
+
+
+      <p class="p">Saxon/Saxonica. More or less needed for everything, Xslts and all the
+      transformation tools that deppend on it.</p>
+
+
+      <p class="p">Morgana XProc/Calabash. Althought we don't provide xproc implementation
+      XProc projects will require one of them and some ant script adjustment.</p>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
