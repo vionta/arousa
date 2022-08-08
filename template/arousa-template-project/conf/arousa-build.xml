@@ -1,0 +1,216 @@
+<project name="arousa-build-file" 
+	 xmlns:ivy="antlib:org.apache.ivy.ant"
+	 >
+
+  <!--
+      The arousa build script implements the ant/build basic 
+      steps for managing dependencies. 
+      You can adjust on this script details like, in which 
+      folder you store the libs, where do you take the scripts
+      from, etc. 
+      This script file manages the basic build cycle.
+  -->
+
+  <!--
+      ........... Clean Dependencies .............
+      This step cleans the downloaded dependencies
+  -->
+  <target name="arousa-clean-lib" description="Cleans dependency lib" >
+    <echo> - Cleaning the dependency folder
+    </echo>
+    <delete dir="lib" failonerror="false" />
+    <mkdir dir="lib" />
+  </target>
+
+  <!--
+      ........... Init the Ivy Task .............
+      This target downloads the Ivy jar, unpacks it, and 
+      prepares the ivy infraestructure. 
+  -->
+  <target name="arousa-init-ivy" description="Init the Ivy Task" unless="${ivy.present}" >
+    <echo> - Cleaning conf/lib directory
+    </echo>
+    <delete dir="conf/lib" failonerror="false" />
+    <mkdir dir="conf/lib" />
+    <mkdir dir="conf/temp" />
+    <echo> - Downloading Apache Ivy, https://ant.apache.org/ivy [- >conf/temp]
+    </echo>
+    <get dest="conf/temp">
+      <url url="https://downloads.apache.org/ant/ivy/2.5.0/apache-ivy-2.5.0-bin-with-deps.zip" /> 
+    </get>
+    <echo> - Expanding ivy [- >conf/lib]
+    </echo>
+    <unzip src="conf/temp/apache-ivy-2.5.0-bin-with-deps.zip" dest="conf/lib" />
+    <echo> - Deleting temp files
+    </echo>
+    <delete dir="conf/temp" />
+  </target>
+
+    <!--
+	........... Check Ivy task configuration .............
+	This target cheks if ivy is present and lanches ivy 
+	initiallization if needed.
+    -->
+    <target name="arousa-check-ivy" >
+      <echo> - Checking ivy lib
+      </echo>
+      <available file="conf/lib" type="dir" property="ivy.present" />
+      <echo> - Ivy file presence : ${ivy.present}
+      </echo>
+  </target>
+
+      <!--
+	........... Ivy Configuration Task .............
+	Ivy iniciallization control.
+    -->
+    <target name="arousa-init-ivy-task" depends="arousa-check-ivy" >
+      <echo> - Checking ivy presence
+      </echo>
+      <antcall target="arousa-init-ivy"  />   
+      <echo>Configuring ivy task
+      </echo>
+      <taskdef 
+	  resource="org/apache/ivy/ant/antlib.xml"
+	  uri="antlib:org.apache.ivy.ant">
+	<classpath>
+	  <fileset  dir="conf/lib/apache-ivy-2.5.0" >
+	    <include name="*.jar" />
+	  </fileset>
+	  <fileset  dir="conf/lib/apache-ivy-2.5.0/lib" >
+	    <include name="*.jar" />
+	  </fileset>
+	</classpath>
+      </taskdef>
+      <echo> - Ivy task configured
+      </echo>
+    </target>
+
+
+     <!--
+      ........... Update dependencies .............
+      This task updates the project direct dependencies 
+      and cheks all the ivy initiallization first.      
+      After downloading dependencies, it unpacks the 
+      zip file contents to build or deps folder.
+      Resources, like images and css are copied to the 
+      build folder in subfolders. 
+      Xslts, Xprocs and Xquerys are copied and expanded 
+      to a special  "deps" folder to avoid mixing originals
+      with dependencies. 
+      From your script files, you can always refer to 
+      dependencies ../xslt/whatever.xsl or similar 
+      or ../xproc/somescript.xqy or ../../deps/xslt/ .... 
+      if your are working with a dependency script.  
+      This is one of the aspects that will probably need 
+      adjustment in different scenarios.
+  --> 
+  <target  name="arousa-update-dependencies" depends="arousa-init-ivy-task"
+	   description="Retrieve dependencies"  >
+    <echo>Retrieving dependencies
+    </echo>
+    
+    <!--
+    <ivy:info file="conf/arousa-ivy.xml"  />
+    -->
+    <echo> Retrieving file .................</echo>
+    <!--
+    <ivy:resolve conf="default" file="conf/arousa-ivy.xml" />
+    -->
+    <ivy:settings file="conf/arousa-ivy-settings.xml"/>
+    <ivy:retrieve  conf="default" file="conf/arousa-ivy.xml" />
+    <!--
+	<ivy:report graph="false" todir="report" />
+	<ivy:retrieve  file="conf/ivy.xml" />
+    -->
+    <echo>Arousa: Dependencies retrieved, expanding files</echo>
+    <mkdir dir="lib"  />
+    <mkdir dir="deps"  />
+    <unzip dest="deps">
+      <patternset>
+	<include name="**/*.xsl"/>
+	<include name="**/*.xqy"/>
+	<include name="**/*.xpl"/>
+	<exclude name="css/**"/>
+	<exclude name="img/**"/>
+	<exclude name="ico/**"/>
+      </patternset>
+      <fileset dir="lib">
+	<include name="*.zip"/>
+      </fileset>
+    </unzip>
+    <unzip dest="build">
+      <patternset>
+	<exclude name="**/*.xsl"/>
+	<exclude name="**/*.xqy"/>
+	<exclude name="**/*.xpl"/>
+	<include name="css/**"/>
+	<include name="img/**"/>
+	<include name="ico/**"/>
+	<include name="icon/**"/>
+	<include name="js/**"/>
+      </patternset>
+      <fileset dir="lib">
+	<include name="*.zip"/>
+      </fileset>
+    </unzip>
+    
+  </target>
+
+  
+  <!--  
+       ........... Publish dependency .............
+       This target publishes the current project 
+       deliverable to the repository. 
+       Modifying this target you could adjust which 
+       files, from where are they taken, etc. 
+       Take into consideration that the published 
+       files must be aligned with the publications 
+       section on the ivy dependency file (arousa-ivy.xml).
+  -->
+  <target name="arousa-publish-dependency" depends="arousa-init-ivy-task"
+	  description="publish main dependency">
+    <ivy:settings file="conf/arousa-ivy-settings.xml"/>
+    <ivy:resolve file="conf/arousa-ivy.xml"  />
+    <!-- Acordarse de capar resolvers particulares -->
+    <!--
+    <ivy:publish
+	resolver="local"
+	pubrevision="1.0"
+	overwrite="true"
+	update="true"	
+	>
+      <artifacts pattern="table-report.zip" />
+    </ivy:publish>
+    -->
+
+    <tstamp>
+    <format property="now"
+	    pattern="yyyyMMddHHmmss"
+	    
+	    />
+    </tstamp>
+    <ivy:publish artifactspattern="dist/[artifact].[ext]"
+		 resolver="local"
+		 pubrevision="1.0"
+		 pubdate="${now}"
+		 status="integration"
+		 forcedeliver="true"
+		 overwrite="true"
+		 update="true"
+/>
+
+
+    <!--
+    <ivy:publish artifactspattern="${build.dir}/${file.name}.${category}" 
+		 resolver="local"
+		 pubrevision="1.0"
+		 pubdate="20091012101010"
+		 status="integration"
+		 forcedeliver="true"
+		 module="${jar.name}"
+		 organisation="test.test"
+		 />
+    -->
+  </target>
+    
+</project>

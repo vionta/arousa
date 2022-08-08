@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
+  <settings  />
+  <property name="ivy.local.default.root"             value="${ivy.default.ivy.user.dir}/local" override="false"/>
+<!--  
+  <property name="ivy.local.default.ivy.pattern"      value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" override="false"/>
+  <property name="ivy.local.default.artifact.pattern" value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" override="false"/>
+-->
+<!--
+  <property name="local-arousa-pattern"
+	    value="${user.home}/.arousa/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+	    override="true" />
+-->
+    <property name="local-arousa-pattern"
+	    value="${user.home}/.arousa/repository/[organisation]/[module]/[revision]/[module]-[revision].[ext]"
+	    override="true" />
+    
+  <settings defaultResolver="local"/>
+  <resolvers>
+    <!--
+    <chain name="myChain">
+      <ibiblio name="ibiblio" m2compatible="true" />
+      <ibiblio name="jboss" m2compatible="true" root="http://repository.jboss.com" />
+      <ibiblio name="jboss2" m2compatible="true" root="http://repository.jboss.com/maven2/" />
+      
+      
+      <filesystem name="local-maven2" m2compatible="true" >
+        <ivy pattern="${local-maven2-pattern}"/>
+        <artifact pattern="${local-maven2-pattern}"/>
+      </filesystem>
+    </chain>
+    -->
+    <chain name="local">
+      <filesystem name="local-arousa" m2compatible="true" >
+	<ivy pattern="${local-arousa-pattern}"/>
+	<artifact pattern="${local-arousa-pattern}"/>
+      </filesystem>
+    </chain>
+    <!--
+	<filesystem name="local">
+	<ivy pattern="${ivy.local.default.root}/${ivy.local.default.ivy.pattern}" />
+	<artifact pattern="${ivy.local.default.root}/${ivy.local.default.artifact.pattern}" />
+	</filesystem>
+    -->
+  </resolvers>
+</ivysettings>

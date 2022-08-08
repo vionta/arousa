@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="default-build-script"   basedir="." default="build">
+
+  <!-- Arousa Configuration directory -->
+  <property name="config.dir" value="conf"></property>
+
+  <!-- Main build properties -->
+  <property file="${config.dir}/build.properties" ></property>
+
+  <!-- Arousa build properties -->  
+  <import file="${config.dir}/arousa-build.xml" />
+
+  <!-- Xproc Import -->
+  <!-- XProc III integration not yet available 
+  <import file="${config.dir}/xproc.xml" /> -->
+  
+  <!-- 
+       <import file="${system.ant.config.dir}/curl.xml"/>
+  -->
+  <!-- Calabash 1.x build file 
+       Import of xproc 1.0 / Calabash tasks and macros
+  -->
+  <import file="${system.ant.config.dir}/calabash.xml"/>
+  
+  <target name="help"  >
+    <echo>
+      Main Targets : clean, build 
+    </echo>
+  </target>
+
+  <target name="clean"  >
+    <echo>
+      Cleaning ....... (add your cleaning steps here)
+    </echo>
+  </target>
+  
+  <target name="build" >
+    <echo>
+      Building  ....... (add your xproc/xslt/etc. steps here)
+    </echo>
+    <!-- Simple Xslt example........... -->
+    <!--
+    <xslt style="src/tasks/tasks2DotFile.xsl"
+	  in="build/tasks.xml"
+	  out="build/content.txt" >
+    </xslt>
+    -->
+    <!-- Directory Xslt example -->
+    <!--
+    <xslt style="src/tasks/fodstasksaxml.xsl"
+	  basedir="temp"
+	  destdir="build" 
+	  includes="*.xml"
+	  extension="-tasks.xml"
+	  />
+    -->
+    <!-- XProc Example........... -->
+    <!--
+	TODO:
+	<calab src="src/timeline/timeline.xpl"/>	
+    -->
+    <!-- XProc 3.0 Example........... -->
+    <!--
+	TODO:
+	<calab src="src/timeline/timeline.xpl"/>	
+    -->
+    <!-- XQuery Example........... -->
+    <!--
+	TODO :
+    -->
+  </target>
+  
+</project>
+

@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project name="jse" default="build" >
+	
+	<property environment="env"/>
+	<property name="system.ant.config.dir" value="${env.ANT_CONFIG_HOME}"></property>
+ 	<property file="${env.ANT_CONFIG_HOME}/system.properties"/>
+	<!-- ......................................................................................
+
+                NOTA : Calabash se queda esperando si no pasamos isource (documento inicio)
+
+            .......................................................................................-->
+	 
+	 <property environment="env"/>
+	
+	<!-- *************************************************************************************
+	
+									METODO SENCILLO, solo con src
+						
+	     ************************************************************************************* -->
+	<macrodef name="calab">
+		<attribute name="src" />
+		<sequential>
+			<java 
+					classname="com.xmlcalabash.drivers.Main"
+					fork="true"
+					>
+					<classpath >
+						<fileset dir="${calabash.home}">
+							<include  name="*.jar"/>
+							<include  name="lib/*.jar"/>
+						</fileset>
+					</classpath>
+					<arg value="@{src}"/>
+				</java>	
+		
+		</sequential>
+	</macrodef>
+	
+	
+		<!-- *************************************************************************************
+	
+									METODO completo, todo por argumentos
+						
+	     ************************************************************************************* --> 
+	<macrodef name="calabargs">
+		 <element name="args"/>
+		<sequential>
+			<java 
+					classname="com.xmlcalabash.drivers.Main"
+					fork="true"
+					>
+					<classpath >
+						<fileset dir="${calabash.home}">
+							<include  name="*.jar"/>
+							<include  name="lib/*.jar"/>
+						</fileset>
+					</classpath>
+					<args></args>
+			</java>	
+		
+		</sequential>
+	</macrodef>
+	
+	
+		<!-- *************************************************************************************
+	
+									Identico al sencillo
+						
+	     ************************************************************************************* --> 
+	
+	<!--
+	<macrodef name="xproc">
+		<attribute name="src" />
+		<sequential>
+			<java 
+					classname="com.xmlcalabash.drivers.Main"
+					fork="true"
+					>
+					<classpath >
+						<fileset dir="${calabash.home}">
+							<include  name="*.jar"/>
+							<include  name="lib/*.jar"/>
+						</fileset>
+					</classpath>
+					<arg value="@{src}"/>
+				</java>	
+		
+		</sequential>
+	</macrodef>
+	-->
+	
+  	<!-- *************************************************************************************
+	
+									Mixto, con src y argumentos
+						
+	     ************************************************************************************* --> 
+  <macrodef name="calabsrcargs">
+		<attribute name="src" />
+		 <element name="args"/>
+		<sequential>
+			<java 
+					classname="com.xmlcalabash.drivers.Main"
+					fork="true"
+					>
+					<classpath >
+						<fileset dir="${calabash.home}">
+							<include  name="*.jar"/>
+							<include  name="lib/*.jar"/>
+						</fileset>
+					</classpath>
+					<arg value="@{src}"/>
+					<args/>
+			</java>	
+		
+		</sequential>
+	</macrodef>
+	<!--
+	
+	Ejempplo de uso.
+	
+	
+	<target name="run">
+			<property environment="env"/>
+			<property name="system.ant.config.dir" value="${env.ANT_CONFIG_HOME}"></property>
+			Probablemente no necesario
+			<property file="${system.ant.config.dir}/system.properties"/>
+	
+		... 
+	
+		<calab src="src/test/timeline.xpl"/>
+	
+	-->
+  
+
+<!--
+    Ejemplo de uso, por ajustar 
+	<macrodef name="prxprocess" >
+		<attribute name="source"/>
+		<attribute name="xpl"/>
+		<sequential>
+			<tstamp>
+				<format property="build.date" pattern="yyyy-MM-dd"/>
+			</tstamp>
+			<calabargs>
+				<args>
+					<arg value="-isource=build/${archivo-entrada}/@{source}"/>
+					<arg value="@{xpl}"/>
+					<arg value="projectname=${archivo-entrada}" />
+					<arg value="currentdate=${build.date}" />
+				</args>
+			</calabargs>
+		</sequential>
+	</macrodef>
+	-->
+	
+  <!-- temporal, la macro original no es esta  --> 
+ <macrodef name="calabdoc">
+		<attribute name="src" />
+		 <attribute name="doc"/>
+		 
+		<sequential>
+		 <echo> Lanzando Calabash : @{src} @{doc}</echo>
+			<java 
+					classname="com.xmlcalabash.drivers.Main"
+					fork="true"
+					>
+					<classpath >
+						<fileset dir="${calabash.home}">
+							<include  name="*.jar"/>
+							<include  name="lib/*.jar"/>
+						</fileset>
+					</classpath>
+					
+					<arg value="-isource=@{doc}"/>
+					<arg value="@{src}"/>
+				
+					<!--
+
+					<arg value="@{src} ../@x{doc}"/>
+					-->
+					<!--
+					<arg value="-D"/>
+					<arg value="-i"/>
+					<arg value="@{doc}"/>s
+					-->
+			</java>	
+		
+		</sequential>
+	</macrodef>
+
+
+
+</project>

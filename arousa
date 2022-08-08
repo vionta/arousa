@@ -1,0 +1,100 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]  
+then 
+
+    echo " Arousa Dependency Script "
+    echo
+    echo " Syntax : arousa command argument1 argument2 .. "
+    echo
+    echo 
+    echo " Arguments : "
+    echo
+    echo " - template-project <name> : Builds a new project arguments <template-project-name(optional)> <project-name>"
+    echo
+    echo " - template-project-content : gets the template project content "
+    echo
+    echo " - template-project-list : prints a list of the templates "
+    echo
+    echo " - update-dependencies : Updates dependencies "
+    echo
+    echo " - publish-dependency : Publish the main dependency "
+    echo
+    echo " - update-main-dependency : Get the repository version of the main dependency "
+    echo
+    echo " - template-project-for-dependency : Get a template project for the indicated dependency "
+    echo
+    echo " - update-arousa-configuration : Update arousa configuration files "
+
+fi
+
+if [ $# -gt 0 ]
+then
+    echo "Executing Arousa : $*"
+    echo "Command : $1 "
+    if [ $1 = 'template-project' ]
+    then
+	if [ $# = 2 ]
+	then
+	    echo " Creating project $2"
+	    #mkdir $2
+	    cp -vr $AROUSA_HOME/template/arousa-template-project/ $2/
+	elif [ $# = 3 ]
+	then
+	    echo " Creating project $3 with template $2"
+	    #mkdir $2
+	    cp -vr $AROUSA_HOME/template/$2/ $3/
+	else 
+	    echo "Enter the new project name:"
+	    read projectname
+	    echo " Creating project $projectname"
+	    #mkdir $projectname
+	    cp -vr $AROUSA_HOME/template/arousa-template-project/ $projectname/
+	fi
+    elif [ $1 = 'template-project-content' ]
+    then
+	echo "Copying template project contents to "
+	pwd
+	cp -r $AROUSA_HOME/template/arousa-template-project/ .
+    elif [ $1 = 'template-project-list' ]
+    then
+	echo " Listing project templates "
+	ls -x $AROUSA_HOME/template
+    elif [ $1 = 'update-dependencies' ]
+    then
+	echo "Updating dependencies from project "
+	ant -f conf/arousa-build.xml arousa-update-dependencies -Dbasedir=.
+    elif [ $1 = 'publish-dependency' ]
+    then
+	echo "Publishing main dependency "
+	echo " NOTE : Make sure your conf/arousa-ivy.xml file is properly configured "
+	ant -f conf/arousa-build.xml arousa-publish-dependency
+    elif [ $1 = 'update-main-dependency' ]
+    then
+	echo "Udating dependencies "
+	ant -f conf/arousa-build.xml arousa-update-dependencies	
+    elif [ $1 = 'update-arousa-configuration' ]
+    then
+	echo "Updating arousa configuration files "
+	#mv conf/arousa-ivy.xml conf/arousa-ivy.xml.backup
+	#cp $AROUSA_HOME/template/arousa-template-project/conf/arousa-ivy.xml conf/arousa-ivy.xml
+	cp $AROUSA_HOME/template/arousa-template-project/conf/arousa-ivy-settings.xml conf/arousa-ivy-settings.xml
+	cp $AROUSA_HOME/template/arousa-template-project/conf/arousa-build.xml conf/arousa-build.xml
+	echo "Arousa configuration files have been updated "
+	echo "Please check changes in conf/arousa-ivy.xml "
+	echo "WARNING:next update may overwrite backup)"
+    elif [ $1 = 'template-project-for-dependency' ]
+    then
+	echo "Enter the dependency name:"
+	read dependencyname
+	echo " Creating project $dependencyname"
+	mkdir $dependencyname
+	cp -r $AROUSA_HOME/template/arousa-dependency-project/* $dependencyname
+    else
+	echo " *****************************************"
+	echo " Unrecoginied command project will exit"
+	echo " Please review the provided option name or rerun "
+	echo " without params to print the help "
+
+    fi
+fi
