@@ -3,7 +3,7 @@
 if [ $# -eq 0 ]  
 then 
 
-    echo " Arousa Dependency Script "
+    echo " Arousa Dependency Script  "
     echo
     echo " Syntax : arousa command argument1 argument2 .. "
     echo
