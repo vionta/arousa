@@ -10,7 +10,7 @@
       from, etc. 
       This script file manages the basic build cycle.
   -->
-  
+
   <!--
       ........... Clean Dependencies .............
       This step cleans the downloaded dependencies
@@ -211,5 +211,77 @@
 		 />
     -->
   </target>
-    
-</project>
+
+
+  <!--
+      This target helps to adjust project name and 
+      path. 
+  -->
+   <target name="arousa-rename-project"
+	   description="Configures the initial project name" >
+     <input message="Please enter project Name:"
+	    addproperty="arousa.project.name"/>
+     <input message="Please enter project Path"
+	    addproperty="arousa.project.path"/>
+     <echo>
+       Your project coordinates will be adjusted to:
+       Name: ${arousa.project.name}
+       Path: ${arousa.project.path}
+     </echo>
+     <input message="Confirm coordinates and proceed (y/n)?"
+	    validargs="y,n"
+	    addproperty="do.continue"/>
+     <condition property="do.abort">
+       <equals arg1="n" arg2="${do.continue}"/>
+     </condition>
+     <fail if="do.abort">Process aborted by user. Please call
+     ant arousa-rename-project to launch again project name
+     and path or you can proceed to adjust it on the
+     conf/arousa-ivy.xml file.</fail>
+     <replace
+	 encoding="UTF-8"
+	 token="initial-arousa-project-name"
+	 value="${arousa.project.name}"
+	 >
+       <fileset dir="./..">
+	 <include name="build.xml" />
+	    <include name="conf/arousa-ivy.xml" /> 
+       </fileset>
+     </replace>
+     <replace
+	 encoding="UTF-8"
+	 token="initial-arousa-project-path"
+	 value="${arousa.project.path}"
+	 >
+       <fileset dir=".">
+	 <include name="arousa-ivy.xml" /> 
+       </fileset>
+     </replace>     
+   </target>
+
+  <target name="arousa-package" >
+    <echo>Packaging project for arousa dependencies</echo>
+    <delete dir="dist" failonerror="false" />
+    <mkdir dir="dist" />
+    <mkdir dir="temp-doc" />
+    <mkdir dir="temp-doc/doc" />
+    <mkdir dir="temp-doc/doc/initial-arousa-project-name" />
+    <copy todir="temp-doc/doc/initial-arousa-project-name" >
+      <fileset dir="doc" >
+        <include name="**" />   
+      </fileset>
+    </copy>
+    <zip destfile="dist/initial-arousa-project-name.zip" >
+      <zipfileset dir="src"  >
+	<include name="**"   /> 
+      </zipfileset>
+      <zipfileset dir="temp-doc"  >
+	<include name="**"   /> 
+      </zipfileset>
+    </zip>
+    <delete dir="temp-doc" failonerror="false" />
+  </target>
+
+
+
+ </project>
