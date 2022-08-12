@@ -39,17 +39,23 @@ then
 	    echo " Creating project $2"
 	    #mkdir $2
 	    cp -vr $AROUSA_HOME/template/arousa-template-project/ $2/
+	    cd $2
+	    ant -f conf/arousa-build.xml arousa-rename-project
 	elif [ $# = 3 ]
 	then
 	    echo " Creating project $3 with template $2"
 	    #mkdir $2
 	    cp -vr $AROUSA_HOME/template/$2/ $3/
+	    cd $3
+	    ant -f conf/arousa-build.xml arousa-rename-project
 	else 
 	    echo "Enter the new project name:"
 	    read projectname
 	    echo " Creating project $projectname"
 	    #mkdir $projectname
 	    cp -vr $AROUSA_HOME/template/arousa-template-project/ $projectname/
+	    cd $projectname
+	    ant -f conf/arousa-build.xml arousa-rename-project	
 	fi
     elif [ $1 = 'template-project-content' ]
     then
@@ -68,11 +74,11 @@ then
     then
 	echo "Publishing main dependency "
 	echo " NOTE : Make sure your conf/arousa-ivy.xml file is properly configured "
-	ant -f conf/arousa-build.xml arousa-publish-dependency
+	ant -f build.xml arousa-publish-dependency
     elif [ $1 = 'update-main-dependency' ]
     then
 	echo "Udating dependencies "
-	ant -f conf/arousa-build.xml arousa-update-dependencies	
+	ant -f build.xml arousa-update-dependencies	
     elif [ $1 = 'update-arousa-configuration' ]
     then
 	echo "Updating arousa configuration files "
