@@ -1,8 +1,8 @@
 <ivy-module version="1.1">
 
   <!--  ...... Enter the group and name of the project ... -->
-  <info organisation="net.vionta.xpl.samplegroup"
-	module="sample-project"/>
+  <info organisation="initial-arousa-project-path"
+	module="initial-arousa-project-name"/>
 
   <configurations>
     <conf name="default" />
