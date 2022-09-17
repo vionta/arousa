@@ -29,7 +29,7 @@
       steps and components.
       </p>
 
-      <p class="p">Apache Ivy as a general purpose dependency
+      <p class="p">Apache Ivy is a general purpose dependency
       management tool. It is used frequently with Apache Ant. Ant is a mature
       build tool appropriate for projects that need detail and flexibility. Ivy
       is an abstract dependency management framework, open to a wide range of
@@ -55,8 +55,9 @@
       frequently handled with Ant.</p>
 
       <p class="p">I already had some small experience with Ivy, and was
-      struggling with non DRY practices. So, I hope that this
-      can be useful as a jump in aid or as a hint other people.
+      struggling with non DRY practices on my xslt scripts. So, I
+      hope that this can be useful as a jump in aid or as a hint
+      for other people.
       Please use it and enjoy it.
       </p>
 
@@ -105,7 +106,7 @@
       </div>
 
       <div class="div">
-	<p class="p">Running your first project:</p>
+	<p class="p"><strong class="ph b">Running your first project:</strong></p>
 
 	<p class="p">In your new project
 	you can run the usual clean, build ant commands. You can
@@ -146,7 +147,7 @@
 
       </div>
       <div class="div">
-	<p class="p">Declaring dependencies</p>
+	<p class="p"><strong class="ph b">Declaring dependencies</strong></p>
 
 	<p class="p">You will need to create a second
 	dependency project and add your first
@@ -154,8 +155,7 @@
 
 	<p class="p">Example:</p>
 
-	<p class="p">----- Meter ejemplo -------------</p>
- 
+	 
 	<p class="p">Run one of the following:</p>
 
 	<pre class="pre codeblock"><code>
@@ -164,8 +164,7 @@
 	<pre class="pre codeblock"><code>
 	  arousa update-dependencies
 	</code></pre>
-	<p class="p">----Pendiente: Ejemplo de salida ------</p>
-
+	
 	<p class="p">Now take a look at the lib and deps
 	folders. On the lib folder you should have your
 	zip files. On the dep folder you should have your
@@ -179,6 +178,47 @@
     </div>
 
     
+
+    <div class="section"><h2 class="title sectiontitle">The clean Command</h2>
+      
+      <div class="div">
+	<p class="p">If you are updating dependencies to your local
+	repository you will need to clean the local cache
+	of the dependant projects.
+	</p>
+
+	<p class="p">When Ivy resolve the dependencies from one of
+	your projects it stores a local cache with them
+	and the dependencies data. The next calls will
+	reuse that information unless you tell Ivy to
+	update it.   
+	</p>
+
+	<p class="p">This is <strong class="ph b">especially important when you are
+	working with two projects on your local environment
+	</strong>.</p>
+
+	<p class="p">Lets say that you are working on two interrelated
+	projects, A and B on your computer. B project uses
+	project A, you have previously built it, integrate
+	the dependency configuration and test it. Now you
+	have performed additional changes on A and published.
+	You update dependencies on B, but dependencies does
+	not seem to be updated.</p>
+
+	<p class="p"><strong class="ph b">You need to clean the cache first</strong>. You can either do:</p>
+
+	<pre class="pre codeblock"><code>
+	  arousa clean-cache
+	  arousa update dependencies
+	</code></pre>
+	or 
+	<pre class="pre codeblock"><code>
+	  ant arousa-clean-cache arousa-update dependencies
+	</code></pre>
+	on project B.
+      </div>
+    </div>
 
     <div class="section"><h2 class="title sectiontitle">The dependencies/lib folder convention.</h2>
       
@@ -298,7 +338,7 @@
       conf/arousa-build.xml files. You can do it in one specific project or add
       a modified template to the tool. </p>
 
-      <p class="p">The configuration Scripts</p>
+      <p class="p"><strong class="ph b">The configuration Scripts</strong></p>
 
       <p class="p">The Arousa template project is based on the following set of scripts.
       </p>
@@ -342,7 +382,7 @@
 	installation is needed.</li>
 
 	<li class="li">
-	  <p class="p">Bash or Cygwin.</p>
+	  <p class="p"><strong class="ph b">Bash or Cygwin.</strong></p>
 
 	  <p class="p">The Arousa script has been only tested on a bash environment based on
 	  Cygwin. There are lots of aspects that need testing on different systems.
@@ -366,7 +406,7 @@
     <div class="section"><h2 class="title sectiontitle">Configuration</h2>
       
 
-      <p class="p">The directory structure convention</p>
+      <p class="p"><strong class="ph b">The directory structure convention</strong></p>
 
 
       <p class="p">In order to maintain a clean distribution we needed to adopt a folder
@@ -381,8 +421,7 @@
       <p class="p">&lt;your-project&gt;/src/xsl</p>
 
 
-      <p class="p">--- Meter pantallazo --</p>
-
+      
     </div>
 
 
@@ -391,17 +430,27 @@
 
       <p class="p">Apache Ant. The scripts are based on the mature/popular build tool.</p>
 
+      <p class="p">https://ant.apache.org</p>
 
+      
       <p class="p">Apache Ivy. Basically, this tool/script is an example of an Apache Ivy
       configuration.</p>
+
+      <p class="p">https://ant.apache.org/ivy/</p>
 
 
       <p class="p">Saxon/Saxonica. More or less needed for everything, Xslts and all the
       transformation tools that deppend on it.</p>
 
+      <p class="p">https://www.saxonica.com</p>
 
+      
       <p class="p">Morgana XProc/Calabash. Althought we don't provide xproc implementation
       XProc projects will require one of them and some ant script adjustment.</p>
+
+      <p class="p">https://www.xml-project.com/morganaxproc/</p>
+
+      <p class="p">http://xmlcalabash.com</p>
 
     </div>
 
