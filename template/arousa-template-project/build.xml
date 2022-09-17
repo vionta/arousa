@@ -11,12 +11,17 @@
   <import file="${config.dir}/arousa-build.xml" />
 
   <!-- Xproc Import -->
-  <!-- XProc III not yet
-  <import file="${config.dir}/xproc.xml" /> -->
+  <!-- XProc III Import 
+       Enable this import and adjust the Morgana XProc III Path 
+       in order to use xproc III
+       <import file="${config.dir}/xproc.xml" /> 
+  -->
   
   <!-- 
-       <import file="${system.ant.config.dir}/calabash.xml"/>
-       <import file="${system.ant.config.dir}/curl.xml"/>
+       XProc I with NW Calabash
+       <import file="${config.dir}/calabash.xml"/>
+       Curl Helper macros 
+       <import file="${config.dir}/curl.xml"/>
   -->
 
   <target name="help"  >
@@ -48,23 +53,19 @@
 	  extension="-tasks.xml"
 	  />
     -->
-    <!-- XProc Example........... -->
-    <!--
-	TODO:
-    <calab src="src/timeline/timeline.xpl"/>	
-    -->
     <!-- XProc 3.0 Example........... -->
     <!--
-	TODO:
-    <calab src="src/timeline/timeline.xpl"/>	
+    <echo>Running a simple task report on this build file</echo>
+    <xproc doc="build.xml" src="src/xpl/build-report.xpl" />
+    -->
+    <!-- XProc I call Example........... -->
+    <!--
+	<calab src="src/timeline/timeline.xpl"/>	
     -->
     <!-- XQuery Example........... -->
     <!--
 	TODO :
     -->
-    
-    
-    <!-- XProc example ........... -->
   </target>
 
   
@@ -72,13 +73,10 @@
     <antcall target="arousa-package" />
   </target>
 
-
   <target name="dist" >
     <echo>Distributing project as an arousa dependency</echo>
     <antcall target="package" />
     <antcall target="arousa-publish-dependency" />
   </target>
-
-  
 </project>
 
