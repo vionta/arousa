@@ -10,7 +10,7 @@
       from, etc. 
       This script file manages the basic build cycle.
   -->
-
+  
   <!--
       ........... Clean Dependencies .............
       This step cleans the downloaded dependencies
@@ -83,6 +83,17 @@
       </taskdef>
       <echo> - Ivy task configured
       </echo>
+    </target>
+
+    <!--
+	...........  Clean Dependencies .............
+	Cleass the cache, necerasy to update local 
+	dependencies from previous builds. 
+    -->
+    <target name="arousa-clean-cache" depends="arousa-init-ivy-task"
+	    description="Retrieve dependencies"  >
+      <ivy:settings id="arousa-settings" file="conf/arousa-ivy-settings.xml"/>
+      <ivy:cleancache settingsRef="arousa-settings" />
     </target>
 
   <!--
@@ -212,7 +223,6 @@
     -->
   </target>
 
-
   <!--
       This target helps to adjust project name and 
       path. 
@@ -259,6 +269,7 @@
      </replace>     
    </target>
 
+  
   <target name="arousa-package" >
     <echo>Packaging project for arousa dependencies</echo>
     <delete dir="dist" failonerror="false" />
