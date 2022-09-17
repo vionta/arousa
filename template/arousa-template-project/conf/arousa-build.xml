@@ -85,6 +85,16 @@
       </echo>
     </target>
 
+    <!--
+	...........  Clean Dependencies .............
+	Cleass the cache, necerasy to update local 
+	dependencies from previous builds. 
+    -->
+    <target name="arousa-clean-cache" depends="arousa-init-ivy-task"
+	    description="Retrieve dependencies"  >
+      <ivy:settings id="arousa-settings" file="conf/arousa-ivy-settings.xml"/>
+      <ivy:cleancache settingsRef="arousa-settings" />
+    </target>
 
      <!--
       ........... Update dependencies .............
@@ -182,7 +192,7 @@
       <artifacts pattern="table-report.zip" />
     </ivy:publish>
     -->
-
+    <!-- The current date -->
     <tstamp>
     <format property="now"
 	    pattern="yyyyMMddHHmmss"
@@ -246,7 +256,8 @@
 	 >
        <fileset dir="./..">
 	 <include name="build.xml" />
-	    <include name="conf/arousa-ivy.xml" /> 
+	 <include name="conf/arousa-ivy.xml" />
+	 <include name="conf/arousa-build.xml" /> 
        </fileset>
      </replace>
      <replace
@@ -255,7 +266,8 @@
 	 value="${arousa.project.path}"
 	 >
        <fileset dir=".">
-	 <include name="arousa-ivy.xml" /> 
+	 <include name="arousa-ivy.xml" />
+	 <include name="conf/arousa-build.xml" /> 
        </fileset>
      </replace>     
    </target>
