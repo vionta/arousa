@@ -1,14 +1,10 @@
-# arousa
-Arousa is an example on using Ivy dependency manager on data/content transformation projects. It is wrapped as a tool that help managing the project templates.
-
-
 # Arousa dependency system {#main}
 
 ## Introduction { .section}
 
 Arousa is an example of dependency management on data/content transformation projects. It is aimed as a tool for managing dependencies between Xslts, XQuery, Xproc, scripts and related resources. It is also intended as an example for getting started with Apache Ivy on such kind of projects, that rely frequently on reusable steps and components.
 
-Apache Ivy as a general purpose dependency management tool. It is used frequently with Apache Ant. Ant is a mature build tool appropriate for projects that need detail and flexibility. Ivy is an abstract dependency management framework, open to a wide range of use cases.
+Apache Ivy is a general purpose dependency management tool. It is used frequently with Apache Ant. Ant is a mature build tool appropriate for projects that need detail and flexibility. Ivy is an abstract dependency management framework, open to a wide range of use cases.
 
 Arousa has two main parts:
 
@@ -20,7 +16,7 @@ Arousa has two main parts:
 
 I think that Ivy adapts really well to transformation projects, where detail is key and every case may have some specific needs. Many of this tools are frequently handled with Ant.
 
-I already had some small experience with Ivy, and was struggling with non DRY practices. So, I hope that this can be useful as a jump in aid or as a hint other people. Please use it and enjoy it.
+I already had some small experience with Ivy, and was struggling with non DRY practices on my xslt scripts. So, I hope that this can be useful as a jump in aid or as a hint for other people. Please use it and enjoy it.
 
 ## Quick Start. { .section}
 
@@ -60,7 +56,7 @@ Type:
 
 At this point you should have created your first Arousa project with a build and configuration samples.
 
-Running your first project:
+**Running your first project:**
 
 In your new project you can run the usual clean, build ant commands. You can adjust the build commands to suit your specific needs.
 
@@ -95,13 +91,11 @@ At this point a zip file with your name and version should be in the dist folder
 
 If everything is ok, you should have published your first dependency and your dist zip file should be in a subfolder of your ivy repository.
 
-Declaring dependencies
+**Declaring dependencies**
 
 You will need to create a second dependency project and add your first project as a dependency.
 
 Example:
-
------ Meter ejemplo -------------
 
 Run one of the following:
 
@@ -117,11 +111,38 @@ Run one of the following:
 	
 ```
 
-----Pendiente: Ejemplo de salida ------
-
 Now take a look at the lib and deps folders. On the lib folder you should have your zip files. On the dep folder you should have your xslts, xprocs, ..etc.
 
 On the build folder your static resources \(css, img, svg, etc.\) should also be placed.
+
+## The clean Command { .section}
+
+If you are updating dependencies to your local repository you will need to clean the local cache of the dependant projects.
+
+When Ivy resolve the dependencies from one of your projects it stores a local cache with them and the dependencies data. The next calls will reuse that information unless you tell Ivy to update it.
+
+This is **especially important when you are working with two projects on your local environment**.
+
+Lets say that you are working on two interrelated projects, A and B on your computer. B project uses project A, you hawe previously built it, integrate the dependency configuration and test it. Now you have performed additional changes on A and published. You update dependencies on B, but dependencies does not seem to update.
+
+**You need to clean the cache first**. You can either do:
+
+```
+
+	  arousa clean-cache
+	  arousa update dependencies
+	
+```
+
+or
+
+```
+
+	  ant arousa-clean-cache arousa-update dependencies
+	
+```
+
+on project B.
 
 ## The dependencies/lib folder convention. { .section}
 
@@ -227,7 +248,7 @@ This kind of projects need a great level of detail and adjustment/flexibility.
 
 You can adjust the solution by modifying the Ant task in the build and conf/arousa-build.xml files. You can do it in one specific project or add a modified template to the tool.
 
-The configuration Scripts
+**The configuration Scripts**
 
 The Arousa template project is based on the following set of scripts.
 
@@ -255,7 +276,7 @@ Where can I get more information
 ## Requirements { .section}
 
 1.  Ant installation and some basic knowledge. Since all the solution is based on Apache Ant, some knowledge is needed. A working Apache Ant installation is needed.
-2.  Bash or Cygwin.
+2.  **Bash or Cygwin.**
 
     The Arousa script has been only tested on a bash environment based on Cygwin. There are lots of aspects that need testing on different systems. Also, the script may be ported to windows .bat file.
 
@@ -266,7 +287,7 @@ Where can I get more information
 
 ## Configuration { .section}
 
-The directory structure convention
+**The directory structure convention**
 
 In order to maintain a clean distribution we needed to adopt a folder convention. We also needed to adopt a naming schema that \(kind of\) transparently integrate the dependency references both from the current project and the next ones.
 
@@ -274,15 +295,23 @@ We use a two level folder configuration.
 
 <your-project\>/src/xsl
 
---- Meter pantallazo --
-
 ## Tools and Aknoledgements { .section}
 
 Apache Ant. The scripts are based on the mature/popular build tool.
 
+https://ant.apache.org
+
 Apache Ivy. Basically, this tool/script is an example of an Apache Ivy configuration.
+
+https://ant.apache.org/ivy/
 
 Saxon/Saxonica. More or less needed for everything, Xslts and all the transformation tools that deppend on it.
 
+https://www.saxonica.com
+
 Morgana XProc/Calabash. Althought we don't provide xproc implementation XProc projects will require one of them and some ant script adjustment.
+
+https://www.xml-project.com/morganaxproc/
+
+http://xmlcalabash.com
 
