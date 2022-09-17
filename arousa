@@ -3,7 +3,7 @@
 if [ $# -eq 0 ]  
 then 
 
-    echo " Arousa Dependency Script  "
+    echo " Arousa Dependency Script "
     echo
     echo " Syntax : arousa command argument1 argument2 .. "
     echo
@@ -21,6 +21,8 @@ then
     echo " - publish-dependency : Publish the main dependency "
     echo
     echo " - update-main-dependency : Get the repository version of the main dependency "
+    echo
+    echo " - clean-cache : Cleans ivy project dependency cache "
     echo
     echo " - template-project-for-dependency : Get a template project for the indicated dependency "
     echo
@@ -46,6 +48,7 @@ then
 	    echo " Creating project $3 with template $2"
 	    #mkdir $2
 	    cp -vr $AROUSA_HOME/template/$2/ $3/
+	    echo " Renaming project to $3"
 	    cd $3
 	    ant -f conf/arousa-build.xml arousa-rename-project
 	else 
@@ -96,11 +99,14 @@ then
 	echo " Creating project $dependencyname"
 	mkdir $dependencyname
 	cp -r $AROUSA_HOME/template/arousa-dependency-project/* $dependencyname
+    elif [ $1 = 'clean-cache' ]
+    then
+	echo " Cleaning cache "
+	ant -f build.xml arousa-clean-cache	
     else
 	echo " *****************************************"
 	echo " Unrecoginied command project will exit"
 	echo " Please review the provided option name or rerun "
 	echo " without params to print the help "
-
     fi
 fi
