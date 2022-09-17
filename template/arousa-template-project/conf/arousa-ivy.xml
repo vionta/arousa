@@ -11,7 +11,7 @@
   <publications>
     <!-- 
 	 Sample artifact 
-    <artifact name="sysml-doc-report" type="packaged" ext="zip" conf="default"/>
+    <artifact name="initial-arousa-project-name" type="transformations" ext="zip" conf="default"/>
     -->
   </publications>
   
