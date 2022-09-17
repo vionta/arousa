@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project name="jse" default="build" >
+  
+  <property environment="env"/>
+  <property name="system.ant.config.dir" value="${env.ANT_CONFIG_HOME}"></property>
+  <property file="${env.ANT_CONFIG_HOME}/system.properties"/>
+
+
+  <property name="morgana.home" value="C:/dev/tools/MorganaXProc-IIIse-0.9.17-beta" />
+  <property name="morgana.jar" value="MorganaXProc-IIIse.jar" />
+  <property name="saxon.home" value="C:/dev/tools/SaxonHE10-1J" />
+
+  
+  <!-- ......................................................................................
+
+       NOTA : Calabash se queda esperando si no pasamos isource (documento inicio)
+
+  .......................................................................................-->
+  
+    
+  <!-- *************************************************************************************
+       
+       METODO SENCILLO, solo con src
+       
+       ************************************************************************************* -->
+
+  <macrodef name="xproc">
+    <attribute name="src" />
+    <attribute name="doc" />
+    
+    <sequential>
+      <java
+	  jar="${morgana.home}/${morgana.jar}" 
+	  fork="true"
+	  >
+	<classpath >
+	  <fileset dir="${morgana.home}/MorganaXProc-IIIse_lib">
+	    <include  name="*.jar"/>
+	    <include  name="lib/*.jar"/>
+	  </fileset>
+	  <fileset dir="${saxon.home}">
+	    <include  name="*.jar"/>
+	    <include  name="lib/*.jar"/>
+	  </fileset>
+	</classpath>
+	<jvmarg
+	    value="-javaagent:${morgana.home}/MorganaXProc-IIIse_lib/quasar-core-0.7.9.jar"
+	    />
+	<arg value="-config=${morgana.home}/config.xml" />
+	<arg value="@{src}"/>
+	<arg value="-input:source=@{doc}"/>
+	<arg value="-xslt-connector=saxon10" />
+      </java>	
+    </sequential>
+  </macrodef>
+  
+  
+  <macrodef name="xproc-src">
+    <attribute name="src" />
+    <sequential>
+      <java
+	  jar="${morgana.home}/${morgana.jar}" 
+	  fork="true"
+	  >
+	<classpath >
+	  <fileset dir="${morgana.home}/MorganaXProc-IIIse_lib">
+	    <include  name="*.jar"/>
+	    <include  name="lib/*.jar"/>
+	  </fileset>
+	  <fileset dir="${saxon.home}">
+	    <include  name="*.jar"/>
+	    <include  name="lib/*.jar"/>
+	  </fileset>
+	</classpath>
+	<jvmarg
+	    value="-javaagent:${morgana.home}/MorganaXProc-IIIse_lib/quasar-core-0.7.9.jar"
+	    />
+	<arg value="-config=${morgana.home}/config.xml" />
+	<arg value="@{src}"/>
+	<arg value="-xquery-connector=Saxon10" /> 
+      </java>	
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="xprocargs">
+    <attribute name="src" />
+    <element name="args"/>
+    <sequential>
+      <java
+	  jar="${morgana.home}/${morgana.jar}" 
+	  fork="true"
+	  >
+	<arg value="-javaagent:MorganaXProc-IIIse_lib/quasar-core-0.7.9.jar" />
+	<arg value="@{src}"/>
+	<args></args>
+      </java>	
+    </sequential>
+  </macrodef>
+
+</project>
