@@ -10,8 +10,7 @@
   <!-- Arousa build properties -->  
   <import file="${config.dir}/arousa-build.xml" />
 
-  <!-- Xproc Import -->
-  <!-- XProc III integration not yet available 
+  <!-- Xproc Import III  -->
   <import file="${config.dir}/xproc.xml" /> -->
   
   <!-- 
@@ -20,7 +19,7 @@
   <!-- Calabash 1.x build file 
        Import of xproc 1.0 / Calabash tasks and macros
   -->
-  <import file="${system.ant.config.dir}/calabash.xml"/>
+  <import file="${config.dir}/calabash.xml"/>
   
   <target name="help"  >
     <echo>
@@ -54,31 +53,32 @@
 	  extension="-tasks.xml"
 	  />
     -->
-    <!-- XProc Example........... -->
+    <!-- XProc 3.0 Example........... 
+    <echo>Running a simple xproc file</echo>
+    <xproc-src src="src/xpl/hello.xpl" />
+    <echo>Running a simple task report on this build file</echo>
+    <xproc doc="build.xml" src="src/xpl/build-report.xpl" />
+    -->
+    <!-- XProc 1.0 Example........... -->
     <!--
-	TODO:
 	<calab src="src/timeline/timeline.xpl"/>	
     -->
-    <!-- XProc 3.0 Example........... -->
-    <!--
-	TODO:
-	<calab src="src/timeline/timeline.xpl"/>	
-    -->
+
     <!-- XQuery Example........... -->
     <!--
 	TODO :
     -->
   </target>
   
-  <target name="package" >
+<target name="package" >
+    <echo>Distributing project as an arousa dependency</echo>
     <antcall target="arousa-package" />
   </target>
 
   <target name="dist" >
     <echo>Distributing project as an arousa dependency</echo>
-    <antcall target="package" />
+    <antcall target="arousa-package" />
     <antcall target="arousa-publish-dependency" />
   </target>
-
 </project>
 
