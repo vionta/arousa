@@ -42,7 +42,7 @@ then
 	    #mkdir $2
 	    cp -vr $AROUSA_HOME/template/arousa-template-project/ $2/
 	    cd $2
-	    ant -f conf/arousa-build.xml arousa-rename-project
+	    ant -f conf/arousa-build.xml arousa-rename-project -Darousa.project.name=$2
 	elif [ $# = 3 ]
 	then
 	    echo " Creating project $3 with template $2"
@@ -50,7 +50,7 @@ then
 	    cp -vr $AROUSA_HOME/template/$2/ $3/
 	    echo " Renaming project to $3"
 	    cd $3
-	    ant -f conf/arousa-build.xml arousa-rename-project
+	    ant -f conf/arousa-build.xml arousa-rename-project -Darousa.project.name=$3
 	else 
 	    echo "Enter the new project name:"
 	    read projectname
@@ -58,7 +58,7 @@ then
 	    #mkdir $projectname
 	    cp -vr $AROUSA_HOME/template/arousa-template-project/ $projectname/
 	    cd $projectname
-	    ant -f conf/arousa-build.xml arousa-rename-project	
+	    ant -f conf/arousa-build.xml arousa-rename-project	-Darousa.project.name=$projectname
 	fi
     elif [ $1 = 'template-project-content' ]
     then
