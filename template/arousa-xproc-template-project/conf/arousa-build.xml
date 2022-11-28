@@ -2,6 +2,7 @@
 	 xmlns:ivy="antlib:org.apache.ivy.ant"
 	 >
 
+  <property file="conf/build.properties" />
   <!--
       The arousa build script implements the ant/build basic 
       steps for managing dependencies. 
@@ -10,7 +11,7 @@
       from, etc. 
       This script file manages the basic build cycle.
   -->
-  
+
   <!--
       ........... Clean Dependencies .............
       This step cleans the downloaded dependencies
@@ -36,11 +37,11 @@
     <echo> - Downloading Apache Ivy, https://ant.apache.org/ivy [- >conf/temp]
     </echo>
     <get dest="conf/temp">
-      <url url="https://downloads.apache.org/ant/ivy/2.5.0/apache-ivy-2.5.0-bin-with-deps.zip" /> 
+      <url url="${ivy.url}" /> 
     </get>
     <echo> - Expanding ivy [- >conf/lib]
     </echo>
-    <unzip src="conf/temp/apache-ivy-2.5.0-bin-with-deps.zip" dest="conf/lib" />
+    <unzip src="conf/temp/apache-ivy-${ivy.version}-bin-with-deps.zip" dest="conf/lib" />
     <echo> - Deleting temp files
     </echo>
     <delete dir="conf/temp" />
@@ -54,7 +55,7 @@
     <target name="arousa-check-ivy" >
       <echo> - Checking ivy lib
       </echo>
-      <available file="conf/lib" type="dir" property="ivy.present" />
+      <available file="conf/lib/apache-ivy-${ivy.version}" type="dir" property="ivy.present" />
       <echo> - Ivy file presence : ${ivy.present}
       </echo>
   </target>
@@ -73,10 +74,10 @@
 	  resource="org/apache/ivy/ant/antlib.xml"
 	  uri="antlib:org.apache.ivy.ant">
 	<classpath>
-	  <fileset  dir="conf/lib/apache-ivy-2.5.0" >
+	  <fileset  dir="conf/lib/apache-ivy-${ivy.version}" >
 	    <include name="*.jar" />
 	  </fileset>
-	  <fileset  dir="conf/lib/apache-ivy-2.5.0/lib" >
+	  <fileset  dir="conf/lib/apache-ivy-${ivy.version}/lib" >
 	    <include name="*.jar" />
 	  </fileset>
 	</classpath>
@@ -143,6 +144,8 @@
 	<exclude name="css/**"/>
 	<exclude name="img/**"/>
 	<exclude name="ico/**"/>
+	<exclude name="icon/**"/>
+	<exclude name="js/**"/>
       </patternset>
       <fileset dir="lib">
 	<include name="*.zip"/>
@@ -181,17 +184,6 @@
 	  description="publish main dependency">
     <ivy:settings file="conf/arousa-ivy-settings.xml"/>
     <ivy:resolve file="conf/arousa-ivy.xml"  />
-    <!-- Acordarse de capar resolvers particulares -->
-    <!--
-    <ivy:publish
-	resolver="local"
-	pubrevision="1.0"
-	overwrite="true"
-	update="true"	
-	>
-      <artifacts pattern="table-report.zip" />
-    </ivy:publish>
-    -->
     <!-- The current date -->
     <tstamp>
       <format property="now"
@@ -209,19 +201,8 @@
 		 update="true"
 		 />
 
-
-    <!--
-    <ivy:publish artifactspattern="${build.dir}/${file.name}.${category}" 
-		 resolver="local"
-		 pubrevision="1.0"
-		 pubdate="20091012101010"
-		 status="integration"
-		 forcedeliver="true"
-		 module="${jar.name}"
-		 organisation="test.test"
-		 />
-    -->
   </target>
+
 
   <!--
       This target helps to adjust project name and 
@@ -255,7 +236,8 @@
 	 >
        <fileset dir="./..">
 	 <include name="build.xml" />
-	    <include name="conf/arousa-ivy.xml" /> 
+	 <include name="conf/build.properties" />
+	 <include name="conf/arousa-ivy.xml" />
        </fileset>
      </replace>
      <replace
@@ -269,21 +251,58 @@
      </replace>     
    </target>
 
-  
   <target name="arousa-package" >
     <echo>Packaging project for arousa dependencies</echo>
     <delete dir="dist" failonerror="false" />
     <mkdir dir="dist" />
+
+    <mkdir dir="temp-dist" />
+    <mkdir dir="temp-dist/${arousa.project.name}" />
+
+    <copy todir="temp-dist/${arousa.project.name}" >
+      <fileset dir="src" >
+        <include name="**" />
+		<exclude name="css/**"/>
+		<exclude name="img/**"/>
+		<exclude name="ico/**"/>
+		<exclude name="icon/**"/>
+		<exclude name="js/**"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="temp-dist/css/${arousa.project.name}" />
+    <mkdir dir="temp-dist/img/${arousa.project.name}" />
+    <mkdir dir="temp-dist/ico/${arousa.project.name}" />
+    <mkdir dir="temp-dist/icon/${arousa.project.name}" />
+    <mkdir dir="temp-dist/js/${arousa.project.name}" />
+
+    <copy todir="temp-dist/css/${arousa.project.name}" >
+      <fileset dir="src/csss" erroronmissingdir="false" ><include name="**" /></fileset>
+    </copy>
+    <copy todir="temp-dist/img/${arousa.project.name}" >
+      <fileset dir="src/img" erroronmissingdir="false" ><include name="**" /></fileset>
+    </copy>
+    <copy todir="temp-dist/ico/${arousa.project.name}" >
+      <fileset dir="src/ico" erroronmissingdir="false" ><include name="**" /></fileset>
+    </copy>
+    <copy todir="temp-dist/icon/${arousa.project.name}" >
+      <fileset dir="src/icon" erroronmissingdir="false" ><include name="**" /></fileset>
+    </copy>
+    <copy todir="temp-dist/js/${arousa.project.name}" >
+      <fileset dir="src/js" erroronmissingdir="false" ><include name="**" /></fileset>
+    </copy>
+    
     <mkdir dir="temp-doc" />
     <mkdir dir="temp-doc/doc" />
-    <mkdir dir="temp-doc/doc/initial-arousa-project-name" />
-    <copy todir="temp-doc/doc/initial-arousa-project-name" >
+    <mkdir dir="temp-doc/doc/${arousa.project.name}" />
+    <copy todir="temp-doc/doc/${arousa.project.name}" >
       <fileset dir="doc" >
         <include name="**" />   
       </fileset>
     </copy>
-    <zip destfile="dist/initial-arousa-project-name.zip" >
-      <zipfileset dir="src"  >
+
+    <zip destfile="dist/${arousa.project.name}.zip" >
+      <zipfileset dir="temp-dist"  >
 	<include name="**"   /> 
       </zipfileset>
       <zipfileset dir="temp-doc"  >
@@ -291,8 +310,7 @@
       </zipfileset>
     </zip>
     <delete dir="temp-doc" failonerror="false" />
+    <delete dir="temp-dist" failonerror="false" />
   </target>
-
-
-
- </project>
+  
+</project>
