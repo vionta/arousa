@@ -1,5 +1,6 @@
 <project name="arousa-build-file" 
 	 xmlns:ivy="antlib:org.apache.ivy.ant"
+	 xmlns:if="ant:if"
 	 >
 
   <property file="conf/build.properties" />
@@ -191,17 +192,44 @@
 	    
 	    />
     </tstamp>
+   <property file="conf/.build.version.properties" />
+    <!-- Repository to publish dependency -->
+    <input message="Repository ?"
+	   validargs="local,shared,public,demo"
+	   addproperty="resolver.name" 
+	   defaultvalue="${last.resolver.name}" 
+	   />
+    <!-- Publication version, since the status is set
+    to integration you can use 1.0 -->
+    <input message="Version (1.0) ?"
+	   addproperty="version.number" 
+	   defaultvalue="${last.version.number}" 
+	   />
     <ivy:publish artifactspattern="dist/[artifact].[ext]"
-		 resolver="local"
-		 pubrevision="1.0"
+		 resolver="${resolver.name}"
+		 pubrevision="${version.number}"
 		 pubdate="${now}"
 		 status="integration"
 		 forcedeliver="true"
 		 overwrite="true"
 		 update="true"
-		 />
+		 />    
+    <echo file="doc/.arousa-versions.txt" append="true" >
+      # Version ${version.number} published to ${resolver.name} (${now})
 
-  </target>
+      Dependency hint
+    &lt;dependency org="${arousa.project.path}" name="${arousa.project.name}" rev="${version.number}" >
+      &lt;artifact name="${arousa.project.name}" type="transformations" ext="zip" />
+    &lt;/dependency>
+    .............................................................. 
+    </echo>
+    
+<echo file="conf/.build.version.properties" append="true" >
+last.version.number=${version.number}
+last.resolver.name=${resolver.name}
+</echo>
+
+</target>
 
 
   <!--
@@ -247,7 +275,7 @@
 	 >
        <fileset dir=".">
 	 <include name="arousa-ivy.xml" />
-	 <include name="conf/arousa-build.xml" /> 
+	 <include name="build.properties" /> 
        </fileset>
      </replace>     
    </target>
@@ -261,13 +289,13 @@
     <mkdir dir="temp-dist/${arousa.project.name}" />
 
     <copy todir="temp-dist/${arousa.project.name}" >
-      <fileset dir="src" >
+      <fileset dir="src/transformations" >
         <include name="**" />
-		<exclude name="css/**"/>
-		<exclude name="img/**"/>
-		<exclude name="ico/**"/>
-		<exclude name="icon/**"/>
-		<exclude name="js/**"/>
+		<exclude name="resources/css/**"/>
+		<exclude name="resources/img/**"/>
+		<exclude name="resources/ico/**"/>
+		<exclude name="resources/icon/**"/>
+		<exclude name="resources/js/**"/>
       </fileset>
     </copy>
 
@@ -278,30 +306,26 @@
     <mkdir dir="temp-dist/js/${arousa.project.name}" />
 
     <copy todir="temp-dist/css/${arousa.project.name}" >
-      <fileset dir="src/csss" erroronmissingdir="false" ><include name="**" /></fileset>
+      <fileset dir="src/resources/css" erroronmissingdir="false" ><include name="**" /></fileset>
     </copy>
     <copy todir="temp-dist/img/${arousa.project.name}" >
-      <fileset dir="src/img" erroronmissingdir="false" ><include name="**" /></fileset>
+      <fileset dir="src/resources/img" erroronmissingdir="false" ><include name="**" /></fileset>
     </copy>
     <copy todir="temp-dist/ico/${arousa.project.name}" >
-      <fileset dir="src/ico" erroronmissingdir="false" ><include name="**" /></fileset>
+      <fileset dir="src/resources/ico" erroronmissingdir="false" ><include name="**" /></fileset>
     </copy>
     <copy todir="temp-dist/icon/${arousa.project.name}" >
-      <fileset dir="src/icon" erroronmissingdir="false" ><include name="**" /></fileset>
+      <fileset dir="src/resources/icon" erroronmissingdir="false" ><include name="**" /></fileset>
     </copy>
     <copy todir="temp-dist/js/${arousa.project.name}" >
-      <fileset dir="src/js" erroronmissingdir="false" ><include name="**" /></fileset>
+      <fileset dir="src/resources/js" erroronmissingdir="false" ><include name="**" /></fileset>
     </copy>
     
+    <available file="doc" type="dir" property="doc.folder.present"/>
+    <antcall target="arousa-package-doc" >
+    </antcall>
+    
     <mkdir dir="temp-doc" />
-    <mkdir dir="temp-doc/doc" />
-    <mkdir dir="temp-doc/doc/${arousa.project.name}" />
-    <copy todir="temp-doc/doc/${arousa.project.name}" >
-      <fileset dir="doc" >
-        <include name="**" />   
-      </fileset>
-    </copy>
-
     <zip destfile="dist/${arousa.project.name}.zip" >
       <zipfileset dir="temp-dist"  >
 	<include name="**"   /> 
@@ -310,8 +334,20 @@
 	<include name="**"   /> 
       </zipfileset>
     </zip>
-    <delete dir="temp-doc" failonerror="false" />
     <delete dir="temp-dist" failonerror="false" />
-  </target>
+    <delete dir="temp-doc" failonerror="false" />
   
+  </target>
+
+  <target name="arousa-package-doc"  if="${doc.folder.present}" >
+    <mkdir dir="temp-doc" />
+    <mkdir dir="temp-doc/doc" />
+    <mkdir dir="temp-doc/doc/${arousa.project.name}" />
+    <copy todir="temp-doc/doc/${arousa.project.name}" >
+      <fileset dir="doc" >
+        <include name="**" />   
+      </fileset>
+    </copy>
+  </target>
+      
 </project>
