@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:declare-step
+    name="main-model-process" version="3.0"
+    xmlns:pt="http://www.example.org/pt"
+    xmlns:p="http://www.w3.org/ns/xproc"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:vmf="http://www.vionta.net/schemas/modelformat/0.1"
+    xmlns:sysrep="http://www.vionta.net/ns/sample-xqy/1.0"
+    type="sysrep:main-model-process"
+    >
+
+  <p:option name="projectname" />
+
+  <p:serialization port="result" method="xml" indent="true" omit-xml-declaration="false"/>
+  
+  <p:documentation>
+    Sample XProc File.
+    This file includes a collection of several xproc steps. 
+  </p:documentation>
+
+  <p:input port="source" primary="true"/>
+
+  <p:output port="result">
+       <p:inline><result>UML Documentation processed</result></p:inline>
+    </p:output>
+
+  <!-- .......... Inner Step Sample  ............ -->
+  <p:declare-step name="procesarentidad" type="pt:procesarentidad">
+
+    <!-- .... Initial connectios, denormalized model and xslts -->
+    <p:input port="source" primary="true"/>
+    <p:option name="entidad" required="true"/>
+    <p:option name="xlsurl" select="concat('../xsl/query/',$entidad,'.xsl')"/>
+
+    <!-- p:load used to load a document at run time, or based on parameters -->
+    <p:load name="xslt_query">
+      <p:with-option name="href" select="concat('../xsl/query/',$entidad,'.xsl')"/>
+    </p:load>
+
+    <!--  A sample xslt step  -->
+    <p:xslt name="queryentity">
+      <p:input port="source">
+        <p:pipe port="source" step="procesarentidad"/>
+      </p:input>
+      <p:input port="stylesheet">
+        <p:pipe port="result" step="xslt_query"/>
+      </p:input>
+      <p:input port="parameters">
+        <p:empty/>
+      </p:input>
+    </p:xslt>
+    <!-- .......... Sample store step, with file name based on parameters .... -->
+    <p:store>
+      <p:with-option name="href"
+                     select="concat('../../build/data/', $entidad, '1.xml')"/>
+    </p:store>
+    
+    <!-- ............ Conditional step sample ............. -->
+    <p:choose>
+      <p:when test="count(//vmf:*[@element-type!='package']) &gt;= 1">
+        <p:store>
+          <p:input port="source">
+            <p:pipe port="result" step="transformentity"/>
+          </p:input>
+          <p:with-option name="href"
+                         select="concat('../../build/elements/', $entidad,'2.xml')"/>
+        </p:store>
+      </p:when>
+      <p:otherwise>
+        <p:store>
+          <p:input port="source">
+            <p:pipe port="result" step="transformentity"/>
+          </p:input>
+          <p:with-option name="href"
+                         select="concat('../../build/elements/', $entidad,'2.xml')"/>
+        </p:store>
+      </p:otherwise>
+    </p:choose>
+
+  </p:declare-step>
+
+  <!-- ........... Organize element dependencies ................ -->
+
+  <!-- ........XPath search and delete items  ..........  -->
+   <p:delete match="//*:children" />
+   <p:delete match="//*:styles[not(./*:owner)]" />
+
+   <!-- ...... Xpath filter ...... -->
+   <p:filter select="//notation:Diagram[.//owner]|//notation102:Diagram[.//owner]"  name="diagrams">
+   </p:filter>
+   
+   <!-- ......... Insertion sample ...... --> 
+   <p:insert position="last-child" math="/" name="diagramsinsertion" >
+     <p:input port="source" >
+       <p:pipe port="result" step="includeassociations" />
+     </p:input>
+     <p:input port="insertion">
+       <p:pipe port="result" step="diagrams"/>
+     </p:input>
+   </p:insert>
+   
+   <!-- .... store step sample ........ -->
+   <p:store href="../../build/data/trace-2-insert-diagrams.xml" name="diagramsdocumentoutput" />
+
+   <!-- ..... Identity step sample, used to define the content explicitly ...... -->
+  <p:identity name="initialdocument" >    
+    <p:input port="source" ><p:pipe port="result" step="includereferences" /></p:input>
+  </p:identity>
+   
+  <!-- ...... Inner Step call sample  ........... -->
+  <pt:procesarentidad entidad="activitys" name="procactivitys">
+    <p:input port="source">
+      <p:pipe port="result" step="initialdocument"/>
+    </p:input>
+  </pt:procesarentidad>  
+
+</p:declare-step>
