@@ -35,7 +35,13 @@
       Cleaning ....... (add your cleaning steps here)
     </echo>
   </target>  
-  
+
+  <target name="prepare" depends="arousa-update-dependencies" >
+    <echo>
+      Preparing the project for building and dependencies. 
+    </echo>
+  </target>  
+
   <target name="build" >
     <echo>
       Building  ....... (add your xproc/xslt/etc. steps here)
