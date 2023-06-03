@@ -11,7 +11,7 @@
   <import file="${config.dir}/arousa-build.xml" />
 
   <!-- Xproc Import III  -->
-  <import file="${config.dir}/xproc.xml" /> -->
+  <import file="${config.dir}/xproc.xml" /> 
   
   <!-- 
        <import file="${system.ant.config.dir}/curl.xml"/>
