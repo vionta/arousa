@@ -9,16 +9,13 @@
   </configurations>
 
   <publications>
-    <!-- 
-	 Sample artifact 
     <artifact name="initial-arousa-project-name" type="transformations" ext="zip" conf="default"/>
-    -->
   </publications>
   
   <dependencies defaultconf="default">
     <!-- Sample dependency 
     <dependency org="net.vionta.xsl.report" name="sysml-report" rev="1.0" >
-      <artifact name="sysml-report" type="packaged" ext="zip" />
+      <artifact name="sysml-report" type="package" ext="zip" />
     </dependency>
     -->
   </dependencies>
